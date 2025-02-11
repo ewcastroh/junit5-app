@@ -16,7 +16,18 @@ class AccountTest {
         String actual = account.getUsername();
 
         assertEquals(expected, actual);
-        assertTrue(actual.equals("username"));
-        assertTrue(account.getBalance().compareTo(BigDecimal.ZERO) > 0);
+        assertTrue(actual.equals(expected));
+    }
+
+    @Test
+    void testAccountBalance() {
+        Account account = new Account("username", new BigDecimal("1000.123456"));
+        BigDecimal expected = new BigDecimal("1000.123456");
+
+        BigDecimal actual = account.getBalance();
+
+        assertEquals(expected, actual);
+        assertTrue(actual.compareTo(BigDecimal.ZERO) > 0);
+        assertFalse(actual.compareTo(BigDecimal.ZERO) < 0);
     }
 }
