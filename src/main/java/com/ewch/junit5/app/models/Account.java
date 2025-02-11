@@ -7,6 +7,11 @@ public class Account {
     private String username;
     private BigDecimal balance;
 
+    public Account(String username, BigDecimal balance) {
+        this.username = username;
+        this.balance = balance;
+    }
+
     public String getUsername() {
         return username;
     }
