@@ -5,7 +5,11 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class AccountTest {
 
@@ -16,9 +20,9 @@ class AccountTest {
 
         String actual = account.getUsername();
 
-        assertNotNull(expected);
-        assertEquals(expected, actual);
-        assertTrue(actual.equals(expected));
+        assertNotNull(expected, () -> "Expected " + expected + " but got " + actual);
+        assertEquals(expected, actual, () -> "Expected " + expected + " but got " + actual);
+        assertTrue(actual.equals(expected), () -> "Expected " + expected + " but got " + actual);
     }
 
     @Test
