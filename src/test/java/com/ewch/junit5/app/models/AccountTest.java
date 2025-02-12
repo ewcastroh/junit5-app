@@ -1,5 +1,6 @@
 package com.ewch.junit5.app.models;
 
+import com.ewch.junit5.app.exceptions.NotEnoughBalance;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -64,5 +65,13 @@ class AccountTest {
 
         assertNotNull(amount);
         assertEquals(expected, account1.getBalance());
+    }
+
+    @Test
+    void testNotEnoughBalanceException() {
+        Account account = new Account("username", new BigDecimal("1000.123456"));
+        NotEnoughBalance notEnoughBalance = assertThrows(NotEnoughBalance.class, () -> {
+            account.debit(new BigDecimal("1500"));
+        });
     }
 }

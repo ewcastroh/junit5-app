@@ -1,5 +1,7 @@
 package com.ewch.junit5.app.models;
 
+import com.ewch.junit5.app.exceptions.NotEnoughBalance;
+
 import java.math.BigDecimal;
 import java.util.Objects;
 
@@ -42,7 +44,11 @@ public class Account {
     }
 
     public void debit(BigDecimal amount) {
-        balance = balance.subtract(amount);
+        BigDecimal newBalance = balance.subtract(amount);
+        if (newBalance.compareTo(BigDecimal.ZERO) < 0) {
+            throw new NotEnoughBalance("Not enough balance");
+        }
+        balance = newBalance;
     }
 
     public void credit(BigDecimal amount) {
