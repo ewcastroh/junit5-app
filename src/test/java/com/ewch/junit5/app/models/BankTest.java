@@ -44,16 +44,18 @@ class BankTest {
                 .findFirst()
                 .get().getUsername();
 
-        assertEquals(expectedBalanceAccount1, account1.getBalance());
-        assertEquals(expectedBalanceAccount2, account2.getBalance());
+        assertAll(
+                () -> assertEquals(expectedBalanceAccount1, account1.getBalance()),
+                () -> assertEquals(expectedBalanceAccount2, account2.getBalance()),
 
-        assertEquals(expectedBalanceAccountsCount, bankAccountsCount);
-        assertEquals(expectedBankName, bank.getName());
-        assertEquals(expectedBankName, account1.getBank().getName());
-        assertEquals(expectedAccountName, username);
+                () -> assertEquals(expectedBalanceAccountsCount, bankAccountsCount),
+                () -> assertEquals(expectedBankName, bank.getName()),
+                () -> assertEquals(expectedBankName, account1.getBank().getName()),
+                () -> assertEquals(expectedAccountName, username),
 
-        assertTrue(bank.getAccounts()
-                .stream()
-                .anyMatch(account -> account.getUsername().equals(expectedAccountName)));
+                () -> assertTrue(bank.getAccounts()
+                        .stream()
+                        .anyMatch(account -> account.getUsername().equals(expectedAccountName)))
+        );
     }
 }
