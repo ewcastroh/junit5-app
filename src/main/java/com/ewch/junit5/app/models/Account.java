@@ -9,6 +9,7 @@ public class Account {
 
     private String username;
     private BigDecimal balance;
+    private Bank bank;
 
     public Account(String username, BigDecimal balance) {
         this.username = username;
@@ -29,6 +30,14 @@ public class Account {
 
     public void setBalance(BigDecimal balance) {
         this.balance = balance;
+    }
+
+    public Bank getBank() {
+        return bank;
+    }
+
+    public void setBank(Bank bank) {
+        this.bank = bank;
     }
 
     @Override
