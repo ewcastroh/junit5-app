@@ -1,5 +1,6 @@
 package com.ewch.junit5.app.models;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -8,6 +9,7 @@ import java.math.BigDecimal;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class BankTest {
 
@@ -28,7 +30,9 @@ class BankTest {
 
     @Test
     @DisplayName("Testing bank-accounts relationships using assertAll")
+    @Disabled("Disabling test simulating a fail")
     void should_test_bank_accounts_relationship() {
+        fail();
         Bank bank = new Bank("Bank Test");
         Account account1 = new Account("account1", new BigDecimal("100.00"));
         Account account2 = new Account("account2", new BigDecimal("50.00"));
