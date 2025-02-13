@@ -1,9 +1,11 @@
 package com.ewch.junit5.app.models;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.jupiter.api.condition.DisabledOnJre;
 import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import org.junit.jupiter.api.condition.EnabledOnJre;
 import org.junit.jupiter.api.condition.EnabledOnOs;
@@ -64,4 +66,29 @@ public class ConditionalTest {
     @Test
     @EnabledIfSystemProperty(named ="ENV", matches = "dev")
     void testDev() {}
+
+    @Test
+    void printEnvironmentVariables() {
+        System.getenv().forEach((k, v) -> System.out.println(k + "=" + v));
+    }
+
+    @Test
+    @EnabledIfEnvironmentVariable(named = "USER", matches = "eimer")
+    void testUserFromEnvironmentVariable() {}
+
+    @Test
+    @DisabledIfEnvironmentVariable(named = "USER", matches = "eimer")
+    void testNoUserFromEnvironmentVariable() {}
+
+    @Test
+    @EnabledIfEnvironmentVariable(named = "NUMBER_OF_PROCESSORS", matches = "8")
+    void testNoNumberOfProcessors() {}
+
+    @Test
+    @EnabledIfEnvironmentVariable(named = "ENVIRONMENT", matches = "dev")
+    void testDevEnvironment() {}
+
+    @Test
+    @DisabledIfEnvironmentVariable(named = "ENVIRONMENT", matches = "prod")
+    void testNoProdEnvironment() {}
 }
