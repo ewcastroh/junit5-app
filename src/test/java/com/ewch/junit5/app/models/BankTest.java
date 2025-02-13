@@ -30,9 +30,9 @@ class BankTest {
 
     @Test
     @DisplayName("Testing bank-accounts relationships using assertAll")
-    @Disabled("Disabling test simulating a fail")
+    //@Disabled("Disabling test simulating a fail")
     void should_test_bank_accounts_relationship() {
-        fail();
+        //fail();
         Bank bank = new Bank("Bank Test");
         Account account1 = new Account("account1", new BigDecimal("100.00"));
         Account account2 = new Account("account2", new BigDecimal("50.00"));
