@@ -6,6 +6,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
@@ -81,6 +83,21 @@ class AccountTest {
     @Test
     @DisplayName("Testing account debit")
     void testAccountDebit() {
+        BigDecimal amount = new BigDecimal("100");
+        BigDecimal expected = account.getBalance().subtract(amount);
+
+        account.debit(amount);
+
+        assertNotNull(amount);
+        assertEquals(expected, account.getBalance());
+    }
+
+    @RepeatedTest(value = 5, name = "{displayName} - Current repetition {currentRepetition} of {totalRepetitions}")
+    @DisplayName("Testing account debit repetition")
+    void testAccountDebitRepetition(RepetitionInfo repetitionInfo) {
+        if (repetitionInfo.getCurrentRepetition() == 1) {
+            System.out.println("Repetition " + repetitionInfo.getCurrentRepetition());
+        }
         BigDecimal amount = new BigDecimal("100");
         BigDecimal expected = account.getBalance().subtract(amount);
 
