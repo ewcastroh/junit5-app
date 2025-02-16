@@ -13,9 +13,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -135,7 +139,7 @@ class AccountTest {
 
         @ParameterizedTest(name = "Test {index} running with value {0} - {argumentsWithNames}")
         @ValueSource(strings = { "100", "200", "500", "1000.123456" })
-        @DisplayName("Testing account debit")
+        @DisplayName("Parameterized Test account debit using ValueSource")
         void parameterizedTestAccountDebitValueSource(String amount) {
             System.out.println("Testing account debit value source");
             account.debit(new BigDecimal(amount));
@@ -146,7 +150,7 @@ class AccountTest {
 
         @ParameterizedTest(name = "Test {index} running with value {0} - {argumentsWithNames}")
         @CsvSource({ "1,100", "2,200", "3,500", "4,1000.123456" })
-        @DisplayName("Testing account debit")
+        @DisplayName("Parameterized Test account debit using CsvSource")
         void parameterizedTestAccountDebitCsvSource(String index, String amount) {
             System.out.println("Testing account debit csv source");
             System.out.println("Index: " + index);
@@ -160,7 +164,7 @@ class AccountTest {
 
         @ParameterizedTest(name = "Test {index} running with value {0} - {argumentsWithNames}")
         @CsvFileSource(resources = "/data.csv")
-        @DisplayName("Testing account debit")
+        @DisplayName("Parameterized Test account debit using CsvFileSource")
         void parameterizedTestAccountDebitCsvFileSource(String amount) {
             System.out.println("Testing account debit csv file source");
             System.out.println("Amount: " + amount);
@@ -169,6 +173,23 @@ class AccountTest {
 
             assertNotNull(account.getBalance());
             assertTrue(account.getBalance().compareTo(BigDecimal.ZERO) > 0);
+        }
+
+        @ParameterizedTest(name = "Test {index} running with value {0} - {argumentsWithNames}")
+        @MethodSource("amountList")
+        @DisplayName("Parameterized Test account debit using MethodSource")
+        void parameterizedTestAccountDebitMethodSource(String amount) {
+            System.out.println("Testing account debit csv file source");
+            System.out.println("Amount: " + amount);
+
+            account.debit(new BigDecimal(amount));
+
+            assertNotNull(account.getBalance());
+            assertTrue(account.getBalance().compareTo(BigDecimal.ZERO) > 0);
+        }
+
+        private static List<String> amountList() {
+            return Arrays.asList("100", "200", "500", "1000.123456");
         }
     }
 }
