@@ -1,26 +1,38 @@
 package com.ewch.junit5.app.models;
 
-import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 
 import java.math.BigDecimal;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTimeout;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 @Tag("bank")
 class BankTest {
 
-    @Test
-    @DisplayName("Testing transfer from bank account to another one")
-    void should_transfer_money_from_an_account_to_another_account() {
+    private Bank bank;
+    private Account account1;
+    private Account account2;
+
+    @BeforeEach
+    void setUp() {
         Bank bank = new Bank("Bank Test");
         Account account1 = new Account("account1", new BigDecimal("100.00"));
         Account account2 = new Account("account2", new BigDecimal("50.00"));
+    }
+
+    @Test
+    @DisplayName("Testing transfer from bank account to another one")
+    void should_transfer_money_from_an_account_to_another_account() {
 
         BigDecimal expectedBalanceAccount1 = new BigDecimal("20.00");
         BigDecimal expectedBalanceAccount2 = new BigDecimal("130.00");
@@ -32,12 +44,9 @@ class BankTest {
 
     @Test
     @DisplayName("Testing bank-accounts relationships using assertAll")
-    //@Disabled("Disabling test simulating a fail")
+        //@Disabled("Disabling test simulating a fail")
     void should_test_bank_accounts_relationship() {
         //fail();
-        Bank bank = new Bank("Bank Test");
-        Account account1 = new Account("account1", new BigDecimal("100.00"));
-        Account account2 = new Account("account2", new BigDecimal("50.00"));
         bank.addAccount(account1);
         bank.addAccount(account2);
 
@@ -68,5 +77,29 @@ class BankTest {
                         .stream()
                         .anyMatch(account -> account.getUsername().equals(expectedAccountName)))
         );
+    }
+
+    @Tag("timeout")
+    @Nested
+    class BankAccountTimeoutTest {
+
+        @Test
+        @Timeout(1)
+        void timeoutTest() throws InterruptedException {
+            TimeUnit.SECONDS.sleep(1);
+        }
+
+        @Test
+        @Timeout(value = 500, unit = TimeUnit.MILLISECONDS)
+        void timeoutTest2() throws InterruptedException {
+            TimeUnit.MILLISECONDS.sleep(499);
+        }
+
+        @Test
+        void timeoutTest3() throws InterruptedException {
+            assertTimeout(Duration.ofSeconds(3), () -> {
+                TimeUnit.SECONDS.sleep(2);
+            });
+        }
     }
 }
