@@ -10,8 +10,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.math.BigDecimal;
@@ -133,9 +134,37 @@ class AccountTest {
         }
 
         @ParameterizedTest(name = "Test {index} running with value {0} - {argumentsWithNames}")
-        @ValueSource(strings = { "100", "200", "500", "1000.12345" })
+        @ValueSource(strings = { "100", "200", "500", "1000.123456" })
         @DisplayName("Testing account debit")
-        void parameterizedTestAccountDebit(String amount) {
+        void parameterizedTestAccountDebitValueSource(String amount) {
+            System.out.println("Testing account debit value source");
+            account.debit(new BigDecimal(amount));
+
+            assertNotNull(account.getBalance());
+            assertTrue(account.getBalance().compareTo(BigDecimal.ZERO) > 0);
+        }
+
+        @ParameterizedTest(name = "Test {index} running with value {0} - {argumentsWithNames}")
+        @CsvSource({ "1,100", "2,200", "3,500", "4,1000.123456" })
+        @DisplayName("Testing account debit")
+        void parameterizedTestAccountDebitCsvSource(String index, String amount) {
+            System.out.println("Testing account debit csv source");
+            System.out.println("Index: " + index);
+            System.out.println("Amount: " + amount);
+
+            account.debit(new BigDecimal(amount));
+
+            assertNotNull(account.getBalance());
+            assertTrue(account.getBalance().compareTo(BigDecimal.ZERO) > 0);
+        }
+
+        @ParameterizedTest(name = "Test {index} running with value {0} - {argumentsWithNames}")
+        @CsvFileSource(resources = "/data.csv")
+        @DisplayName("Testing account debit")
+        void parameterizedTestAccountDebitCsvFileSource(String amount) {
+            System.out.println("Testing account debit csv file source");
+            System.out.println("Amount: " + amount);
+
             account.debit(new BigDecimal(amount));
 
             assertNotNull(account.getBalance());
