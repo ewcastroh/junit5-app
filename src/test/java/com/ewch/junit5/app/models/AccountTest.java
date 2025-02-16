@@ -11,6 +11,8 @@ import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -35,10 +37,20 @@ class AccountTest {
 
     Account account;
 
+    private TestInfo testInfo;
+    private TestReporter reporter;
+
     @BeforeEach
-    void setUp() {
+    void setUp(TestInfo testInfo, TestReporter reporter) {
         System.out.println("Before each test");
+        this.testInfo = testInfo;
+        this.reporter = reporter;
+
         this.account = new Account("username", new BigDecimal("1000.123456"));
+        reporter.publishEntry("testInfo.getDisplayName(): " + testInfo.getDisplayName());
+        reporter.publishEntry("testInfo.getTestClass(): " + testInfo.getTestClass().get().getCanonicalName());
+        reporter.publishEntry("testInfo.getTestMethod(): " + testInfo.getTestMethod().get().getName());
+        reporter.publishEntry("testInfo.getTags()" + testInfo.getTags());
     }
 
     @AfterEach
@@ -59,6 +71,8 @@ class AccountTest {
     @Test
     @DisplayName("Testing account name")
     void testAccountName() {
+        System.out.println("Testing account name");
+        reporter.publishEntry("using TestInfo in method: " + testInfo.getTestClass().get().descriptorString());
         String expected = "username";
 
         String actual = account.getUsername();
@@ -86,6 +100,7 @@ class AccountTest {
         @Test
         @DisplayName("Testing account references")
         void testAccountReference() {
+            System.out.println("Testing account references");
             Account account2 = new Account("username", new BigDecimal("1000.123456"));
 
             //assertNotEquals(account1, account2);
