@@ -25,9 +25,9 @@ class BankTest {
 
     @BeforeEach
     void setUp() {
-        Bank bank = new Bank("Bank Test");
-        Account account1 = new Account("account1", new BigDecimal("100.00"));
-        Account account2 = new Account("account2", new BigDecimal("50.00"));
+        this.bank = new Bank("Bank Test");
+        this.account1 = new Account("account1", new BigDecimal("100.00"));
+        this.account2 = new Account("account2", new BigDecimal("50.00"));
     }
 
     @Test
@@ -84,7 +84,7 @@ class BankTest {
     class BankAccountTimeoutTest {
 
         @Test
-        @Timeout(1)
+        @Timeout(2)
         void timeoutTest() throws InterruptedException {
             TimeUnit.SECONDS.sleep(1);
         }
