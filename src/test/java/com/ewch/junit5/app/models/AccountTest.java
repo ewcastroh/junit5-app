@@ -6,10 +6,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.math.BigDecimal;
 
@@ -71,59 +74,72 @@ class AccountTest {
         assertFalse(actual.compareTo(BigDecimal.ZERO) < 0);
     }
 
-    @Test
-    @DisplayName("Testing account references")
-    void testAccountReference() {
-        Account account2 = new Account("username", new BigDecimal("1000.123456"));
+    @Nested
+    class AccountOperationsTest {
+        @Test
+        @DisplayName("Testing account references")
+        void testAccountReference() {
+            Account account2 = new Account("username", new BigDecimal("1000.123456"));
 
-        //assertNotEquals(account1, account2);
-        assertEquals(account, account2);
-    }
-
-    @Test
-    @DisplayName("Testing account debit")
-    void testAccountDebit() {
-        BigDecimal amount = new BigDecimal("100");
-        BigDecimal expected = account.getBalance().subtract(amount);
-
-        account.debit(amount);
-
-        assertNotNull(amount);
-        assertEquals(expected, account.getBalance());
-    }
-
-    @RepeatedTest(value = 5, name = "{displayName} - Current repetition {currentRepetition} of {totalRepetitions}")
-    @DisplayName("Testing account debit repetition")
-    void testAccountDebitRepetition(RepetitionInfo repetitionInfo) {
-        if (repetitionInfo.getCurrentRepetition() == 1) {
-            System.out.println("Repetition " + repetitionInfo.getCurrentRepetition());
+            //assertNotEquals(account1, account2);
+            assertEquals(account, account2);
         }
-        BigDecimal amount = new BigDecimal("100");
-        BigDecimal expected = account.getBalance().subtract(amount);
 
-        account.debit(amount);
+        @Test
+        @DisplayName("Testing account debit")
+        void testAccountDebit() {
+            BigDecimal amount = new BigDecimal("100");
+            BigDecimal expected = account.getBalance().subtract(amount);
 
-        assertNotNull(amount);
-        assertEquals(expected, account.getBalance());
-    }
+            account.debit(amount);
 
-    @Test
-    @DisplayName("Testing account credit")
-    void testAccountCredit() {
-        BigDecimal amount = new BigDecimal("100");
-        BigDecimal expected = account.getBalance().add(amount);
+            assertNotNull(amount);
+            assertEquals(expected, account.getBalance());
+        }
 
-        account.credit(amount);
+        @RepeatedTest(value = 5, name = "{displayName} - Current repetition {currentRepetition} of {totalRepetitions}")
+        @DisplayName("Testing account debit repetition")
+        void testAccountDebitRepetition(RepetitionInfo repetitionInfo) {
+            if (repetitionInfo.getCurrentRepetition() == 1) {
+                System.out.println("Repetition " + repetitionInfo.getCurrentRepetition());
+            }
+            BigDecimal amount = new BigDecimal("100");
+            BigDecimal expected = account.getBalance().subtract(amount);
 
-        assertNotNull(amount);
-        assertEquals(expected, account.getBalance());
-    }
+            account.debit(amount);
 
-    @Test
-    @DisplayName("Testing NotEnoughBalanceException")
-    void testNotEnoughBalanceException() {
-        NotEnoughBalanceException notEnoughBalanceException = assertThrows(NotEnoughBalanceException.class, () -> {
-            account.debit(new BigDecimal("1500"));
-        });
+            assertNotNull(amount);
+            assertEquals(expected, account.getBalance());
+        }
+
+        @Test
+        @DisplayName("Testing account credit")
+        void testAccountCredit() {
+            BigDecimal amount = new BigDecimal("100");
+            BigDecimal expected = account.getBalance().add(amount);
+
+            account.credit(amount);
+
+            assertNotNull(amount);
+            assertEquals(expected, account.getBalance());
+        }
+
+        @Test
+        @DisplayName("Testing NotEnoughBalanceException")
+        void testNotEnoughBalanceException() {
+            NotEnoughBalanceException notEnoughBalanceException = assertThrows(NotEnoughBalanceException.class, () -> {
+                account.debit(new BigDecimal("1500"));
+            });
+        }
+
+        @ParameterizedTest(name = "Test {index} running with value {0} - {argumentsWithNames}")
+        @ValueSource(strings = { "100", "200", "500", "1000.12345" })
+        @DisplayName("Testing account debit")
+        void parameterizedTestAccountDebit(String amount) {
+            account.debit(new BigDecimal(amount));
+
+            assertNotNull(account.getBalance());
+            assertTrue(account.getBalance().compareTo(BigDecimal.ZERO) > 0);
+        }
     }
 }
